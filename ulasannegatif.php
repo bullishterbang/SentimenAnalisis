@@ -1,3 +1,14 @@
+<?php
+error_reporting(E_ALL & ~E_NOTICE);
+include("koneksi.php");
+$page = $_GET['p'] == FALSE ? 1 : $_GET['p'];
+$row = ($page - 1 ) * 30;
+$sql ="SELECT ulasantesting FROM tb_normalisasi WHERE CAST(positif AS DOUBLE) < CAST(negatif AS DOUBLE) LIMIT $row ,30";
+$result = $koneksi->query($sql);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +36,7 @@
 	</style>
 </head>
 <body>
+	<center>
 <div class="col-md-16">
 			<h2 class="judul">
 				Sentimen Analisis Game PUBG Mobile
@@ -38,44 +50,41 @@
 			<table class="table">
 				<tr>
 					<td><a href="index.php" role="button" class="btn btn-default">Uji Sentimen</a></td>
-					<td><a href="tambahdata.php" role="button" class="btn btn-default">Tambah Data</a></td>
-					<td><a href="ulasanpositif.php" role="button" class="btn btn-default">Ulasan Positif</a></td>
-					<td><a href="ulasannegatif.php" role="button" class="btn btn-primary">Ulasan Negatif</a></td>
+					<!-- <td><a href="tambahdata.php" role="button" class="btn btn-default">Tambah Data</a></td> -->	
+					<td><a href="ulasanpositif.php" role="button" class="btn btn-default">Kumpulan Positif</a></td>
+					<td><a href="ulasannegatif.php" role="button" class="btn btn-primary">Kumpulan Negatif</a></td>
 				</tr>
 				<tr>
-					<td colspan="4">
-						
+					<td colspan="3">		
 						<table class="table table-bordered">
 							
 							<tr>
 								<td style="text-align: center; font-weight: bold;">No</td>
 								<td style="column-width: 500px; text-align: center; font-weight: bold;">Ulasan</td>
 							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-						</table>
+							<?php
+							$nu= 1 + ($page-1)*30;
+							if ($result->num_rows > 0) {
+ 							// output data of each row
+  								while($row = $result->fetch_assoc()) {
 
+    								echo"
+    								<tr>
+    									<td>" . $nu++ . "</td>
+    									<td>" . $row['ulasantesting'] . "</td>
+    								</tr>
+    								";
+  								}
+							} else {
+  								echo "0 results";
+							}
+							$koneksi->close();
+							?>
+						</table>
 					</td>
 				</tr>
-			</table>
+			</table>			
 		</div>
+</center>
 </body>
 </html>
